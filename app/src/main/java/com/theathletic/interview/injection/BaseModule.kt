@@ -28,7 +28,7 @@ val baseModule = module {
 
     single { AuthorRepository(get(), get()) }
 
-    viewModel { ArticlesViewModel(get()) }
+    viewModel { ArticlesViewModel(get(), get()) }
 
     single { HashMap<String, Author>() } // TODO: init map
 }

@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.theathletic.interview.articles.data.Article
 import com.theathletic.interview.articles.data.ArticleRepository
 import com.theathletic.interview.articles.data.toUiModel
+import com.theathletic.interview.authors.data.AuthorRepository
 import com.theathletic.interview.core.updateState
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -13,7 +14,8 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 class ArticlesViewModel(
-    articleRepository: ArticleRepository
+    articleRepository: ArticleRepository,
+    private val authorRepository: AuthorRepository
 ) : ViewModel() {
 
     private val _viewState = MutableStateFlow(ArticlesViewState())
@@ -30,7 +32,9 @@ class ArticlesViewModel(
 
     private fun onArticlesLoaded(articles: List<Article>) {
         _viewState.updateState {
-            copy(articleModels = articles.map { it.toUiModel() }, isLoading = false)
+            copy(articleModels = articles.map {
+                val author = authorRepository.getAuthor(it.authorId)
+                it.toUiModel(author?.name) }, isLoading = false)
         }
     }
 }
