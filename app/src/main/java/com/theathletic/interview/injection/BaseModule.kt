@@ -3,6 +3,7 @@ package com.theathletic.interview.injection
 import com.theathletic.interview.articles.data.ArticleRepository
 import com.theathletic.interview.articles.data.remote.ArticleApi
 import com.theathletic.interview.articles.ui.ArticlesViewModel
+import com.theathletic.interview.authors.data.Author
 import com.theathletic.interview.authors.data.AuthorRepository
 import com.theathletic.interview.authors.data.remote.AuthorApi
 import org.koin.androidx.viewmodel.dsl.viewModel
@@ -25,8 +26,9 @@ val baseModule = module {
 
     single { ArticleRepository(get()) }
 
-    single { AuthorRepository(get()) }
+    single { AuthorRepository(get(), get()) }
 
     viewModel { ArticlesViewModel(get()) }
 
+    single { HashMap<String, Author>() } // TODO: init map
 }
