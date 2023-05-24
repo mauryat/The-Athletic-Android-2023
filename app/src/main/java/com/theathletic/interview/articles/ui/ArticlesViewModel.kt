@@ -34,7 +34,7 @@ class ArticlesViewModel(
         _viewState.updateState {
             copy(articleModels = articles.map {
                 val author = authorRepository.getAuthor(it.authorId)
-                it.toUiModel(author?.name) }, isLoading = false)
+                it.toUiModel(author?.name, author?.imageUrlString) }, isLoading = false)
         }
     }
 }

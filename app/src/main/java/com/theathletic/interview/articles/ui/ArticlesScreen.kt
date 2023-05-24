@@ -4,17 +4,18 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -32,7 +33,8 @@ class ArticleUiModel(
     val title: String,
     val author: String? = null,
     val displayAuthor: Boolean = false,
-    val imageUrl: String?
+    val imageUrl: String?,
+    var authorImageUrl: String? = null
 )
 
 @Composable
@@ -91,11 +93,19 @@ fun ArticleItem(model: ArticleUiModel) {
                 style = MaterialTheme.typography.body1,
                 color = White
             )
-            Text(
-                text = model.author ?: "",
-                style = MaterialTheme.typography.caption,
-                color = White
-            )
+            Row {
+                AsyncImage(
+                    model = model.authorImageUrl,
+                    contentDescription = null,
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier.size(16.dp)
+                )
+                Text(
+                    text = model.author ?: "",
+                    style = MaterialTheme.typography.caption,
+                    color = White
+                )
+            }
         }
     }
 }
@@ -106,8 +116,9 @@ fun ArticleItemPreview() {
     ArticleItem(
         ArticleUiModel(
             "Sample Title",
+            author = "Sample Author Name",
             imageUrl = null,
-            author = "Sample Author Name"
+            authorImageUrl = "https://cdn.theathletic.com/app/uploads/2019/09/27193448/JH_Pic.jpg"
         )
     )
 }

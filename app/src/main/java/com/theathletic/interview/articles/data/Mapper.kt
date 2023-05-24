@@ -14,8 +14,9 @@ fun ArticleApiModel.toDomain() = Article(
     imageUrl = imageUrlString ?: ""
 )
 
-fun Article.toUiModel(authorName: String?) = ArticleUiModel(
+fun Article.toUiModel(authorName: String?, authorImageUrl: String?) = ArticleUiModel(
     title = title,
+    author = authorName,
     imageUrl = imageUrl,
-    author = authorName
+    authorImageUrl = authorImageUrl
 )
