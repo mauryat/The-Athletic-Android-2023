@@ -7,5 +7,6 @@ data class ArticleApiModel(
     val leagueId: String?,
     val title: String,
     val imageUrlString: String?,
-    val authorId: String?
+    val authorId: String?,
+    val updatedAt: String?
 )

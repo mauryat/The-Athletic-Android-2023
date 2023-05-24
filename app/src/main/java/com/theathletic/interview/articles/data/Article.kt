@@ -7,7 +7,8 @@ data class Article(
     val leagueId: String,
     val title: String,
     val imageUrl: String,
-    val authorId: String
+    val authorId: String,
+    val updatedAt: String
 ) {
     companion object {
         const val UNKNOWN = ""

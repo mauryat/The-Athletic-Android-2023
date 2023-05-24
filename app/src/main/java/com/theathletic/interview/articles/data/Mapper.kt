@@ -11,12 +11,14 @@ fun ArticleApiModel.toDomain() = Article(
     teamId = teamId ?: UNKNOWN,
     leagueId = leagueId ?: UNKNOWN,
     authorId = authorId ?: UNKNOWN,
-    imageUrl = imageUrlString ?: ""
+    imageUrl = imageUrlString ?: "",
+    updatedAt = updatedAt ?: UNKNOWN
 )
 
 fun Article.toUiModel(authorName: String?, authorImageUrl: String?) = ArticleUiModel(
     title = title,
     author = authorName,
     imageUrl = imageUrl,
-    authorImageUrl = authorImageUrl
+    authorImageUrl = authorImageUrl,
+    updatedAt = updatedAt
 )

@@ -34,7 +34,8 @@ class ArticleUiModel(
     val author: String? = null,
     val displayAuthor: Boolean = false,
     val imageUrl: String?,
-    var authorImageUrl: String? = null
+    var authorImageUrl: String? = null,
+    val updatedAt: String?
 )
 
 @Composable
@@ -106,6 +107,11 @@ fun ArticleItem(model: ArticleUiModel) {
                     color = White
                 )
             }
+            Text(
+                text = model.updatedAt ?: "",
+                style = MaterialTheme.typography.caption,
+                color = White
+            )
         }
     }
 }
@@ -118,7 +124,8 @@ fun ArticleItemPreview() {
             "Sample Title",
             author = "Sample Author Name",
             imageUrl = null,
-            authorImageUrl = "https://cdn.theathletic.com/app/uploads/2019/09/27193448/JH_Pic.jpg"
+            authorImageUrl = "https://cdn.theathletic.com/app/uploads/2019/09/27193448/JH_Pic.jpg",
+            updatedAt = "May 24"
         )
     )
 }
