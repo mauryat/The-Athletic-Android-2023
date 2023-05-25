@@ -3,6 +3,9 @@ package com.theathletic.interview.articles.data
 import com.theathletic.interview.articles.data.Article.Companion.UNKNOWN
 import com.theathletic.interview.articles.data.remote.ArticleApiModel
 import com.theathletic.interview.articles.ui.ArticleUiModel
+import java.text.SimpleDateFormat
+import java.util.Locale
+
 
 fun ArticleApiModel.toDomain() = Article(
     id = id,
@@ -20,5 +23,14 @@ fun Article.toUiModel(authorName: String?, authorImageUrl: String?) = ArticleUiM
     author = authorName,
     imageUrl = imageUrl,
     authorImageUrl = authorImageUrl,
-    updatedAt = updatedAt
+    updatedAt = format(updatedAt)
 )
+
+fun format(updatedAt: String): String? {
+
+    val inputFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.US)
+    val outputFormat = SimpleDateFormat("d MMM yyyy", Locale.US)
+    val parsedDate = inputFormat.parse(updatedAt)
+
+    return parsedDate?.let { outputFormat.format(parsedDate) }
+}
