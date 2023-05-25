@@ -91,4 +91,5 @@ lint/tmp/
 # Room Schemas
 mobile/schemas
 
-
+# Notes
+Notes.txt
