@@ -31,6 +31,8 @@ import com.theathletic.interview.core.collectWithLifecycle
 import com.theathletic.interview.ui.theme.Black
 import com.theathletic.interview.ui.theme.White
 import org.koin.androidx.compose.getViewModel
+import java.net.URLEncoder
+import java.nio.charset.StandardCharsets
 
 class ArticleUiModel(
     val title: String,
@@ -39,14 +41,15 @@ class ArticleUiModel(
     val imageUrl: String?,
     var authorImageUrl: String? = null,
     val updatedAt: String?,
-    val body: String
+    val body: String,
+    val articleImageUrl: String
 )
 
 @Composable
 fun ArticlesScreen(
     viewModel: ArticlesViewModel = getViewModel(),
     navController: NavHostController,
-    onSingleArticleClick: (String, String, String) -> Unit
+    onSingleArticleClick: (String, String, String, String) -> Unit
 ) {
 
     val state by viewModel.viewState.collectAsState(initial = ArticlesViewState(true, emptyList()))
@@ -65,7 +68,7 @@ fun ArticlesList(
     showLoading: Boolean,
     models: List<ArticleUiModel>,
     navController: NavHostController,
-    onSingleArticleClick: (String, String, String) -> Unit
+    onSingleArticleClick: (String, String, String, String) -> Unit
 ) {
     Box {
         if (showLoading) {
@@ -86,14 +89,14 @@ fun ArticlesList(
 fun ArticleItem(
     model: ArticleUiModel,
     navController: NavHostController,
-    onSingleArticleClick: (String , String, String) -> Unit
+    onSingleArticleClick: (String, String, String, String) -> Unit
 ) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
             .background(color = Black)
             .height(200.dp)
-            .clickable { onSingleArticleClick(model.body, model.author ?: "mark twain", model.authorImageUrl ?: "mark twain") },
+            .clickable { onSingleArticleClick(model.body, model.author ?: "mark twain", model.authorImageUrl ?: "mark twain", URLEncoder.encode(model.articleImageUrl, StandardCharsets.UTF_8.toString())) },
     ) {
         AsyncImage(
             alpha = 0.5f,
@@ -144,9 +147,10 @@ fun ArticleItemPreview() {
             imageUrl = null,
             authorImageUrl = "https://cdn.theathletic.com/app/uploads/2019/09/27193448/JH_Pic.jpg",
             updatedAt = "May 24",
-            body = "1"
+            body = "1",
+            articleImageUrl = "url"
         ),
         rememberNavController(),
-        onSingleArticleClick = { body, authorName, authorImageUrl -> {}}
+        onSingleArticleClick = { body, authorName, authorImageUrl, articleImageUrl -> {}}
     )
 }
