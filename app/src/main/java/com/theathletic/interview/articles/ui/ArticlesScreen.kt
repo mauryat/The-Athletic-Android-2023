@@ -28,8 +28,6 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
 import com.theathletic.interview.core.collectWithLifecycle
-import com.theathletic.interview.main.MainActivity
-import com.theathletic.interview.main.navigateSingleTopTo
 import com.theathletic.interview.ui.theme.Black
 import com.theathletic.interview.ui.theme.White
 import org.koin.androidx.compose.getViewModel
@@ -40,11 +38,16 @@ class ArticleUiModel(
     val displayAuthor: Boolean = false,
     val imageUrl: String?,
     var authorImageUrl: String? = null,
-    val updatedAt: String?
+    val updatedAt: String?,
+    val articleId: String
 )
 
 @Composable
-fun ArticlesScreen(viewModel: ArticlesViewModel = getViewModel(), navController: NavHostController) {
+fun ArticlesScreen(
+    viewModel: ArticlesViewModel = getViewModel(),
+    navController: NavHostController,
+    onSingleArticleClick: (String, String, String) -> Unit
+) {
 
     val state by viewModel.viewState.collectAsState(initial = ArticlesViewState(true, emptyList()))
 
@@ -54,14 +57,15 @@ fun ArticlesScreen(viewModel: ArticlesViewModel = getViewModel(), navController:
 //        }
     }
 
-    ArticlesList(showLoading = state.isLoading, models = state.articleModels, navController)
+    ArticlesList(showLoading = state.isLoading, models = state.articleModels, navController, onSingleArticleClick)
 }
 
 @Composable
 fun ArticlesList(
     showLoading: Boolean,
     models: List<ArticleUiModel>,
-    navController: NavHostController
+    navController: NavHostController,
+    onSingleArticleClick: (String, String, String) -> Unit
 ) {
     Box {
         if (showLoading) {
@@ -73,19 +77,23 @@ fun ArticlesList(
             }
         }
         LazyColumn(verticalArrangement = Arrangement.spacedBy(2.dp)) {
-            items(models) { ArticleItem(it, navController) }
+            items(models) { ArticleItem(it, navController, onSingleArticleClick) }
         }
     }
 }
 
 @Composable
-fun ArticleItem(model: ArticleUiModel, navController: NavHostController) {
+fun ArticleItem(
+    model: ArticleUiModel,
+    navController: NavHostController,
+    onSingleArticleClick: (String , String, String) -> Unit
+) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
             .background(color = Black)
             .height(200.dp)
-            .clickable { navController.navigateSingleTopTo(MainActivity.Screen.SingleArticle.route) },
+            .clickable { onSingleArticleClick(model.articleId, model.author ?: "", model.authorImageUrl ?: "") },
     ) {
         AsyncImage(
             alpha = 0.5f,
@@ -135,8 +143,10 @@ fun ArticleItemPreview() {
             author = "Sample Author Name",
             imageUrl = null,
             authorImageUrl = "https://cdn.theathletic.com/app/uploads/2019/09/27193448/JH_Pic.jpg",
-            updatedAt = "May 24"
+            updatedAt = "May 24",
+            articleId = "1"
         ),
-        rememberNavController()
+        rememberNavController(),
+        onSingleArticleClick = { articleId, authorName, authorImageUrl -> {}}
     )
 }

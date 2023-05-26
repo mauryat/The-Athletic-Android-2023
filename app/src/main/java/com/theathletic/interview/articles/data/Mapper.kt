@@ -23,7 +23,8 @@ fun Article.toUiModel(authorName: String?, authorImageUrl: String?) = ArticleUiM
     author = authorName,
     imageUrl = imageUrl,
     authorImageUrl = authorImageUrl,
-    updatedAt = format(updatedAt)
+    updatedAt = format(updatedAt),
+    articleId = id
 )
 
 fun format(updatedAt: String): String? {

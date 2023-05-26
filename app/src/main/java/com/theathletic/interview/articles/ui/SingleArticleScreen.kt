@@ -4,6 +4,6 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 
 @Composable
-fun SingleArticleScreen() {
-    Text(text = "Single Article Screen")
+fun SingleArticleScreen(articleId: String?) {
+    Text(text = "Single Article Screen for article: $articleId")
 }
