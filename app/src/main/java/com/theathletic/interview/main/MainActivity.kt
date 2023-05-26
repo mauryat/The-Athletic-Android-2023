@@ -5,7 +5,6 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.BottomNavigation
@@ -20,8 +19,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
@@ -33,6 +30,7 @@ import androidx.navigation.compose.rememberNavController
 import com.theathletic.interview.R
 import com.theathletic.interview.articles.ui.ArticlesScreen
 import com.theathletic.interview.articles.ui.ArticlesViewModel
+import com.theathletic.interview.articles.ui.SingleArticleScreen
 import com.theathletic.interview.ui.theme.AthleticTheme
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -70,7 +68,7 @@ class MainActivity : ComponentActivity() {
                 modifier = Modifier.padding(paddingValues)
             ) {
                 composable(route = Screen.Articles.route) {
-                    ArticlesScreen(articlesViewModel)
+                    ArticlesScreen(articlesViewModel, navController)
                 }
                 composable(route = Screen.Leagues.route) {
                     Text(
@@ -78,6 +76,9 @@ class MainActivity : ComponentActivity() {
                             .padding(10.dp),
                         text = "League List"
                     )
+                }
+                composable(route = Screen.SingleArticle.route) {
+                    SingleArticleScreen()
                 }
             }
         }
@@ -106,6 +107,7 @@ class MainActivity : ComponentActivity() {
     ) {
         object Articles : Screen(R.string.title_articles, R.drawable.ic_articles, "articles")
         object Leagues : Screen(R.string.title_leagues, R.drawable.ic_leagues, "leagues")
+        object SingleArticle : Screen(R.string.title_single_article, R.drawable.ic_articles, "single_article")
     }
 }
 

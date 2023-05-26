@@ -1,6 +1,7 @@
 package com.theathletic.interview.articles.ui
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -23,8 +24,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
 import com.theathletic.interview.core.collectWithLifecycle
+import com.theathletic.interview.main.MainActivity
+import com.theathletic.interview.main.navigateSingleTopTo
 import com.theathletic.interview.ui.theme.Black
 import com.theathletic.interview.ui.theme.White
 import org.koin.androidx.compose.getViewModel
@@ -39,7 +44,7 @@ class ArticleUiModel(
 )
 
 @Composable
-fun ArticlesScreen(viewModel: ArticlesViewModel = getViewModel()) {
+fun ArticlesScreen(viewModel: ArticlesViewModel = getViewModel(), navController: NavHostController) {
 
     val state by viewModel.viewState.collectAsState(initial = ArticlesViewState(true, emptyList()))
 
@@ -49,11 +54,15 @@ fun ArticlesScreen(viewModel: ArticlesViewModel = getViewModel()) {
 //        }
     }
 
-    ArticlesList(showLoading = state.isLoading, models = state.articleModels)
+    ArticlesList(showLoading = state.isLoading, models = state.articleModels, navController)
 }
 
 @Composable
-fun ArticlesList(showLoading: Boolean, models: List<ArticleUiModel>) {
+fun ArticlesList(
+    showLoading: Boolean,
+    models: List<ArticleUiModel>,
+    navController: NavHostController
+) {
     Box {
         if (showLoading) {
             Box(
@@ -64,18 +73,19 @@ fun ArticlesList(showLoading: Boolean, models: List<ArticleUiModel>) {
             }
         }
         LazyColumn(verticalArrangement = Arrangement.spacedBy(2.dp)) {
-            items(models) { ArticleItem(it) }
+            items(models) { ArticleItem(it, navController) }
         }
     }
 }
 
 @Composable
-fun ArticleItem(model: ArticleUiModel) {
+fun ArticleItem(model: ArticleUiModel, navController: NavHostController) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
             .background(color = Black)
             .height(200.dp)
+            .clickable { navController.navigateSingleTopTo(MainActivity.Screen.SingleArticle.route) },
     ) {
         AsyncImage(
             alpha = 0.5f,
@@ -126,6 +136,7 @@ fun ArticleItemPreview() {
             imageUrl = null,
             authorImageUrl = "https://cdn.theathletic.com/app/uploads/2019/09/27193448/JH_Pic.jpg",
             updatedAt = "May 24"
-        )
+        ),
+        rememberNavController()
     )
 }
