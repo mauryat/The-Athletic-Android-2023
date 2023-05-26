@@ -69,11 +69,15 @@ class MainActivity : ComponentActivity() {
                 startDestination = Screen.Articles.route,
                 modifier = Modifier.padding(paddingValues)
             ) {
-                composable(route = Screen.Articles.route) {
-                    ArticlesScreen(articlesViewModel, navController,
-                    onSingleArticleClick = { articleId, authorName, authorImageUrl ->
-                        navController.navigateToSingleArticle(articleId, authorName, authorImageUrl)
-                    })
+                composable(
+                    route = Screen.Articles.route) {
+                    ArticlesScreen(
+                        articlesViewModel,
+                        navController,
+                        onSingleArticleClick = { articleId, authorName, authorImageUrl ->
+                            navController.navigateToSingleArticle(articleId, authorName, authorImageUrl)
+                        }
+                    )
                 }
                 composable(route = Screen.Leagues.route) {
                     Text(
@@ -88,8 +92,12 @@ class MainActivity : ComponentActivity() {
                 ) { navBackStackEntry ->
                     val articleId =
                         navBackStackEntry.arguments?.getString(Screen.SingleArticle.articleIdArg)
+                    val authorName =
+                        navBackStackEntry.arguments?.getString(Screen.SingleArticle.authorNameArg)
+                    val authorImageUrl =
+                        navBackStackEntry.arguments?.getString(Screen.SingleArticle.authorImageUrlArg)
 
-                    SingleArticleScreen(articleId)
+                    SingleArticleScreen(articleId, authorName, authorImageUrl)
                 }
             }
         }
@@ -119,17 +127,21 @@ class MainActivity : ComponentActivity() {
         object Articles : Screen(R.string.title_articles, R.drawable.ic_articles, "articles")
         object Leagues : Screen(R.string.title_leagues, R.drawable.ic_leagues, "leagues")
         object SingleArticle : Screen(R.string.title_single_article, R.drawable.ic_articles, "single_article") {
+            const val authorImageUrlArg = "author_image_url"
+            const val authorNameArg = "author_name"
             const val articleIdArg = "article_id"
-            val routeWithArgs = "${route}/{${articleIdArg}}"
+            val routeWithArgs = "${route}/{${articleIdArg}}/{${authorNameArg}}/{${authorImageUrlArg}}"
             val arguments = listOf(
-                navArgument(articleIdArg) { type = NavType.StringType }
+                navArgument(articleIdArg) { type = NavType.StringType },
+                navArgument(authorNameArg) { type = NavType.StringType },
+                navArgument(authorImageUrlArg) { type = NavType.StringType }
             )
         }
     }
 }
 
 private fun NavHostController.navigateToSingleArticle(articleId: String, authorName: String, authorImageUrl: String) {
-    this.navigateSingleTopTo("${MainActivity.Screen.SingleArticle.route}/$articleId") ///$authorName/$authorImageUrl")
+    this.navigateSingleTopTo("${MainActivity.Screen.SingleArticle.route}/$articleId/$authorName/$authorImageUrl")
 }
 
 fun NavHostController.navigateSingleTopTo(route: String) {
