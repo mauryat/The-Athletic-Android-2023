@@ -74,8 +74,8 @@ class MainActivity : ComponentActivity() {
                     ArticlesScreen(
                         articlesViewModel,
                         navController,
-                        onSingleArticleClick = { body, authorName, authorImageUrl, articleImageUrl ->
-                            navController.navigateToSingleArticle(body, authorName, authorImageUrl, articleImageUrl)
+                        onSingleArticleClick = { body, authorName, authorImageUrl, articleImageUrl, title ->
+                            navController.navigateToSingleArticle(body, authorName, authorImageUrl, articleImageUrl, title)
                         }
                     )
                 }
@@ -98,8 +98,10 @@ class MainActivity : ComponentActivity() {
                         navBackStackEntry.arguments?.getString(Screen.SingleArticle.authorImageUrlArg)
                     val articleImageUrl =
                         navBackStackEntry.arguments?.getString(Screen.SingleArticle.articleImageUrlArg)
+                    val title =
+                        navBackStackEntry.arguments?.getString(Screen.SingleArticle.titleArg)
 
-                    SingleArticleScreen(body, authorName, authorImageUrl, articleImageUrl)
+                    SingleArticleScreen(body, authorName, authorImageUrl, articleImageUrl, title)
                 }
             }
         }
@@ -129,16 +131,18 @@ class MainActivity : ComponentActivity() {
         object Articles : Screen(R.string.title_articles, R.drawable.ic_articles, "articles")
         object Leagues : Screen(R.string.title_leagues, R.drawable.ic_leagues, "leagues")
         object SingleArticle : Screen(R.string.title_single_article, R.drawable.ic_articles, "single_article") {
+            const val titleArg = "title"
             const val articleImageUrlArg = "article_image_url"
             const val authorImageUrlArg = "author_image_url"
             const val authorNameArg = "author_name"
             const val bodyArg = "body"
-            val routeWithArgs = "${route}/{${bodyArg}}/{${authorNameArg}}/{${authorImageUrlArg}}/{${articleImageUrlArg}}"
+            val routeWithArgs = "${route}/{${bodyArg}}/{${authorNameArg}}/{${authorImageUrlArg}}/{${articleImageUrlArg}}/{${titleArg}}"
             val arguments = listOf(
                 navArgument(bodyArg) { type = NavType.StringType },
                 navArgument(authorNameArg) { type = NavType.StringType },
                 navArgument(authorImageUrlArg) { type = NavType.StringType },
-                navArgument(articleImageUrlArg) { type = NavType.StringType }
+                navArgument(articleImageUrlArg) { type = NavType.StringType },
+                navArgument(titleArg) { type = NavType.StringType }
             )
         }
     }
@@ -148,9 +152,10 @@ private fun NavHostController.navigateToSingleArticle(
     body: String,
     authorName: String,
     authorImageUrl: String,
-    articleImageUrl: String
+    articleImageUrl: String,
+    title: String
 ) {
-    this.navigateSingleTopTo("${MainActivity.Screen.SingleArticle.route}/$body/$authorName/$authorImageUrl/$articleImageUrl")
+    this.navigateSingleTopTo("${MainActivity.Screen.SingleArticle.route}/$body/$authorName/$authorImageUrl/$articleImageUrl/$title")
 }
 
 fun NavHostController.navigateSingleTopTo(route: String) {

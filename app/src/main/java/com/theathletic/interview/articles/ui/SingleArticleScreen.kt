@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -15,10 +16,15 @@ fun SingleArticleScreen(
     body: String?,
     authorName: String?,
     authorImageUrl: String?,
-    articleImageUrl: String?
+    articleImageUrl: String?,
+    title: String?
 ) {
 
     Column(modifier = Modifier.verticalScroll(state = rememberScrollState())) {
+
+        Text(text = title ?: "Title not available",
+        style = MaterialTheme.typography.h4)
+
         AsyncImage(
             modifier = Modifier.fillMaxWidth(),
             model = articleImageUrl,
@@ -26,6 +32,6 @@ fun SingleArticleScreen(
             contentScale = ContentScale.Crop
         )
 
-        Text(text = "Single Article Screen for params: $body $authorName $authorImageUrl")
+        Text(text = body ?: "Unable to load content")
     }
 }

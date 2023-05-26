@@ -49,7 +49,7 @@ class ArticleUiModel(
 fun ArticlesScreen(
     viewModel: ArticlesViewModel = getViewModel(),
     navController: NavHostController,
-    onSingleArticleClick: (String, String, String, String) -> Unit
+    onSingleArticleClick: (String, String, String, String, String) -> Unit
 ) {
 
     val state by viewModel.viewState.collectAsState(initial = ArticlesViewState(true, emptyList()))
@@ -68,7 +68,7 @@ fun ArticlesList(
     showLoading: Boolean,
     models: List<ArticleUiModel>,
     navController: NavHostController,
-    onSingleArticleClick: (String, String, String, String) -> Unit
+    onSingleArticleClick: (String, String, String, String, String) -> Unit
 ) {
     Box {
         if (showLoading) {
@@ -89,14 +89,14 @@ fun ArticlesList(
 fun ArticleItem(
     model: ArticleUiModel,
     navController: NavHostController,
-    onSingleArticleClick: (String, String, String, String) -> Unit
+    onSingleArticleClick: (String, String, String, String, String) -> Unit
 ) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
             .background(color = Black)
             .height(200.dp)
-            .clickable { onSingleArticleClick(model.body, model.author ?: "mark twain", model.authorImageUrl ?: "mark twain", URLEncoder.encode(model.articleImageUrl, StandardCharsets.UTF_8.toString())) },
+            .clickable { onSingleArticleClick(model.body, model.author ?: "mark twain", model.authorImageUrl ?: "mark twain", URLEncoder.encode(model.articleImageUrl, StandardCharsets.UTF_8.toString()), model.title) },
     ) {
         AsyncImage(
             alpha = 0.5f,
@@ -151,6 +151,6 @@ fun ArticleItemPreview() {
             articleImageUrl = "url"
         ),
         rememberNavController(),
-        onSingleArticleClick = { body, authorName, authorImageUrl, articleImageUrl -> {}}
+        onSingleArticleClick = { body, authorName, authorImageUrl, articleImageUrl, title -> {}}
     )
 }
