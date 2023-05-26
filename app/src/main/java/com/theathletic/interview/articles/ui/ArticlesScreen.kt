@@ -96,7 +96,7 @@ fun ArticleItem(
             .fillMaxWidth()
             .background(color = Black)
             .height(200.dp)
-            .clickable { onSingleArticleClick(model.body, model.author ?: "mark twain", model.authorImageUrl ?: "mark twain", URLEncoder.encode(model.articleImageUrl, StandardCharsets.UTF_8.toString()), model.title) },
+            .clickable { onSingleArticleClick(model.body, model.author ?: "mark twain", model.authorImageUrl ?: URLEncoder.encode("https://cdn.theathletic.com/app/uploads/2019/09/27193448/JH_Pic.jpg", StandardCharsets.UTF_8.toString()), URLEncoder.encode(model.articleImageUrl, StandardCharsets.UTF_8.toString()), model.title) },
     ) {
         AsyncImage(
             alpha = 0.5f,
