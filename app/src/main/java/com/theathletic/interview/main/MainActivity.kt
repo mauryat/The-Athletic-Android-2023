@@ -21,7 +21,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
@@ -33,11 +32,14 @@ import com.theathletic.interview.R
 import com.theathletic.interview.articles.ui.ArticlesScreen
 import com.theathletic.interview.articles.ui.ArticlesViewModel
 import com.theathletic.interview.articles.ui.SingleArticleScreen
+import com.theathletic.interview.leagues.LeaguesViewModel
+import com.theathletic.interview.leagues.ui.LeaguesScreen
 import com.theathletic.interview.ui.theme.AthleticTheme
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MainActivity : ComponentActivity() {
     private val articlesViewModel: ArticlesViewModel by viewModel()
+    private val leaguesViewModel: LeaguesViewModel by viewModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -79,11 +81,17 @@ class MainActivity : ComponentActivity() {
                         }
                     )
                 }
-                composable(route = Screen.Leagues.route) {
-                    Text(
-                        modifier = Modifier
-                            .padding(10.dp),
-                        text = "League List"
+                composable(
+                    route = Screen.Leagues.route) {
+                    LeaguesScreen(
+                        leaguesViewModel,
+                        navController,
+                        onSingleLeagueClick = { leagueImageUrl, title ->
+                            navController.navigateToSingleLeague(
+                                leagueImageUrl,
+                                title
+                            )
+                        }
                     )
                 }
                 composable(
@@ -102,6 +110,16 @@ class MainActivity : ComponentActivity() {
                         navBackStackEntry.arguments?.getString(Screen.SingleArticle.titleArg)
 
                     SingleArticleScreen(body, authorName, authorImageUrl, articleImageUrl, title)
+                }
+                composable(
+                    route = Screen.SingleLeague.routeWithArgs,
+                    arguments = Screen.SingleLeague.arguments
+                ) { navBackStackEntry ->
+                    val leagueImageUrl =
+                        navBackStackEntry.arguments?.getString(Screen.SingleLeague.leagueImageUrlArg)
+                    val title =
+                        navBackStackEntry.arguments?.getString(Screen.SingleLeague.titleArg)
+                    // TODO: navigate to articles screen
                 }
             }
         }
@@ -145,6 +163,16 @@ class MainActivity : ComponentActivity() {
                 navArgument(titleArg) { type = NavType.StringType }
             )
         }
+
+        object SingleLeague : Screen(R.string.title_single_league, R.drawable.ic_articles, "single_league") {
+            const val titleArg = "title"
+            const val leagueImageUrlArg = "league_image_url"
+            val routeWithArgs = "${route}/{${leagueImageUrlArg}}/{${titleArg}}"
+            val arguments = listOf(
+                navArgument(leagueImageUrlArg) { type = NavType.StringType },
+                navArgument(titleArg) { type = NavType.StringType }
+            )
+        }
     }
 }
 
@@ -156,6 +184,13 @@ private fun NavHostController.navigateToSingleArticle(
     title: String
 ) {
     this.navigateSingleTopTo("${MainActivity.Screen.SingleArticle.route}/$body/$authorName/$authorImageUrl/$articleImageUrl/$title")
+}
+
+private fun NavHostController.navigateToSingleLeague(
+    articleImageUrl: String,
+    title: String
+) {
+    this.navigateSingleTopTo("${MainActivity.Screen.SingleLeague.route}/$articleImageUrl/$title")
 }
 
 fun NavHostController.navigateSingleTopTo(route: String) {
