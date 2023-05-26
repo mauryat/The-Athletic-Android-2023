@@ -21,10 +21,15 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import com.theathletic.interview.R
 import com.theathletic.interview.articles.ui.ArticlesScreen
 import com.theathletic.interview.articles.ui.ArticlesViewModel
@@ -48,20 +53,29 @@ class MainActivity : ComponentActivity() {
     @Composable
     fun MainScreenView() {
         var selectedScreen by remember { mutableStateOf(Screen.Articles as Screen) }
+        val navController = rememberNavController()
+
         Scaffold(bottomBar = {
             BottomNavigation(
                 selectedScreen,
-            ) { screen -> selectedScreen = screen }
+            ) {
+                screen -> selectedScreen = screen
+                navController
+                    .navigateSingleTopTo(screen.route)
+            }
         }) { paddingValues ->
-            Column(modifier = Modifier.padding(paddingValues)) {
-                when (selectedScreen) {
-                    Screen.Articles -> {
-                        ArticlesScreen(articlesViewModel)
-                    }
-                    Screen.Leagues -> Text(
+            NavHost(
+                navController = navController,
+                startDestination = Screen.Articles.route,
+                modifier = Modifier.padding(paddingValues)
+            ) {
+                composable(route = Screen.Articles.route) {
+                    ArticlesScreen(articlesViewModel)
+                }
+                composable(route = Screen.Leagues.route) {
+                    Text(
                         modifier = Modifier
-                            .padding(10.dp)
-                            .align(Alignment.CenterHorizontally),
+                            .padding(10.dp),
                         text = "League List"
                     )
                 }
@@ -74,7 +88,7 @@ class MainActivity : ComponentActivity() {
         val items = listOf(Screen.Articles, Screen.Leagues)
         BottomNavigation {
             items.forEachIndexed { index, item ->
-                BottomNavigationItem(selected = item == selectedScreen,
+                BottomNavigationItem(selected = item.route == selectedScreen.route,
                     icon = {
                         Icon(
                             painterResource(id = item.resourceIcon), contentDescription = getString(item.resourceTitle)
@@ -87,9 +101,16 @@ class MainActivity : ComponentActivity() {
     }
 
     sealed class Screen(
-        @StringRes val resourceTitle: Int, @DrawableRes val resourceIcon: Int
+        @StringRes val resourceTitle: Int, @DrawableRes val resourceIcon: Int,
+        val route: String
     ) {
-        object Articles : Screen(R.string.title_articles, R.drawable.ic_articles)
-        object Leagues : Screen(R.string.title_leagues, R.drawable.ic_leagues)
+        object Articles : Screen(R.string.title_articles, R.drawable.ic_articles, "articles")
+        object Leagues : Screen(R.string.title_leagues, R.drawable.ic_leagues, "leagues")
+    }
+}
+
+fun NavHostController.navigateSingleTopTo(route: String) {
+    this.navigate(route) {
+        launchSingleTop = true
     }
 }
