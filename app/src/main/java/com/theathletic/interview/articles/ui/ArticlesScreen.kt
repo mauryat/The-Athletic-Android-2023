@@ -39,7 +39,7 @@ class ArticleUiModel(
     val imageUrl: String?,
     var authorImageUrl: String? = null,
     val updatedAt: String?,
-    val articleId: String
+    val body: String
 )
 
 @Composable
@@ -93,7 +93,7 @@ fun ArticleItem(
             .fillMaxWidth()
             .background(color = Black)
             .height(200.dp)
-            .clickable { onSingleArticleClick(model.articleId, model.author ?: "", model.authorImageUrl ?: "") },
+            .clickable { onSingleArticleClick(model.body, model.author ?: "mark twain", model.authorImageUrl ?: "mark twain") },
     ) {
         AsyncImage(
             alpha = 0.5f,
@@ -144,9 +144,9 @@ fun ArticleItemPreview() {
             imageUrl = null,
             authorImageUrl = "https://cdn.theathletic.com/app/uploads/2019/09/27193448/JH_Pic.jpg",
             updatedAt = "May 24",
-            articleId = "1"
+            body = "1"
         ),
         rememberNavController(),
-        onSingleArticleClick = { articleId, authorName, authorImageUrl -> {}}
+        onSingleArticleClick = { body, authorName, authorImageUrl -> {}}
     )
 }
